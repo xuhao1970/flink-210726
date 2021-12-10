@@ -14,15 +14,15 @@ import org.apache.flink.util.Collector;
 public class Flink01_Stream_Unbounded_WordCount {
     public static void main(String[] args) throws Exception {
         //1.获取流的执行环境
-//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         //可以访问WebUi
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+//        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
 
         //将并行度设置为1
         env.setParallelism(1);
 
         //TODO 全局都不串
-        env.disableOperatorChaining();
+//        env.disableOperatorChaining();
 
         //2.读取无界数据，从端口读取数据
         DataStreamSource<String> streamSource = env.socketTextStream("hadoop102", 9999);
@@ -41,6 +41,7 @@ public class Flink01_Stream_Unbounded_WordCount {
 //                .startNewChain()
                 //与前后都断开
 //                .disableChaining()
+                .slotSharingGroup("group1")
                 ;
 
         //4.将单词组成Tuple2元组
