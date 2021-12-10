@@ -1,22 +1,28 @@
-package com.atguigu.day01;
+package com.atguigu.day02;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
-public class Flink03_Stream_Unbounded_WordCount {
+public class Flink01_Stream_Unbounded_WordCount {
     public static void main(String[] args) throws Exception {
         //1.获取流的执行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        //可以访问WebUi
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
 
         //将并行度设置为1
-//        env.setParallelism(1);
+        env.setParallelism(1);
+
+        //TODO 全局都不串
+        env.disableOperatorChaining();
 
         //2.读取无界数据，从端口读取数据
         DataStreamSource<String> streamSource = env.socketTextStream("hadoop102", 9999);
@@ -30,7 +36,12 @@ public class Flink03_Stream_Unbounded_WordCount {
                     collector.collect(word);
                 }
             }
-        });
+        })
+                // 与前面断开
+//                .startNewChain()
+                //与前后都断开
+//                .disableChaining()
+                ;
 
         //4.将单词组成Tuple2元组
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordToOneDStream = wordDStream.map(new MapFunction<String, Tuple2<String, Integer>>() {
