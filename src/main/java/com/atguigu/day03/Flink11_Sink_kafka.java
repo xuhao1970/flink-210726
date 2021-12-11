@@ -1,5 +1,6 @@
 package com.atguigu.day03;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.bean.WaterSensor;
 import org.apache.flink.api.common.functions.MapFunction;

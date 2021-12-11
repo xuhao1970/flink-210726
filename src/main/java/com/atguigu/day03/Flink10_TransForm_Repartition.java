@@ -18,7 +18,7 @@ public class Flink10_TransForm_Repartition {
         env.setParallelism(4);
 
         //2.从端口获取数据
-        DataStreamSource<String> streamSource = env.socketTextStream("localhost", 9999);
+        DataStreamSource<String> streamSource = env.socketTextStream("xuhao001", 9999);
 
         // 3.利用Filter算子将奇数过滤掉
         SingleOutputStreamOperator<String> map = streamSource.map(new MapFunction<String, String>() {

@@ -24,12 +24,9 @@ public class Flink12_Sink_Redis {
         //2.从端口中获取数据
         DataStreamSource<String> streamSource = env.socketTextStream("localhost", 9999);
 
-        SingleOutputStreamOperator<WaterSensor> map = streamSource.map(new MapFunction<String, WaterSensor>() {
-            @Override
-            public WaterSensor map(String value) throws Exception {
-                String[] split = value.split(",");
-                return new WaterSensor(split[0], Long.parseLong(split[1]), Integer.parseInt(split[2]));
-            }
+        SingleOutputStreamOperator<WaterSensor> map = streamSource.map((MapFunction<String, WaterSensor>) value -> {
+            String[] split = value.split(",");
+            return new WaterSensor(split[0], Long.parseLong(split[1]), Integer.parseInt(split[2]));
         });
 
         FlinkJedisPoolConfig jedisPoolConfig = new FlinkJedisPoolConfig.Builder()

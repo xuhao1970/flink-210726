@@ -37,7 +37,7 @@ public class Flink15_Sink_JDBC {
 
         //TODO 通过JDBC的方式写入Mysql
 
-        SinkFunction<WaterSensor> jdbcSink = JdbcSink.<WaterSensor>sink(
+        SinkFunction<WaterSensor> jdbcSink = JdbcSink.sink(
                 "insert into sensor values(?,?,?)",
                 (pstm, value) -> {
                     pstm.setString(1, value.getId());
@@ -58,7 +58,7 @@ public class Flink15_Sink_JDBC {
         );
 
 
-        map.addSink(jdbcSink);
+//        map.addSink(jdbcSink);
         env.execute();
     }
 }
