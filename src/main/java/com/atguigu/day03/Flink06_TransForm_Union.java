@@ -19,7 +19,7 @@ public class Flink06_TransForm_Union {
 
         DataStreamSource<String> intDStream = env.fromElements("1", "2", "3", "4", "5");
 
-        DataStreamSource<String> nameDStream = env.fromElements("张", "王", "李", "赵", "钱");
+        DataStreamSource<String> nameDStream = env.fromElements("张", "王", "李", "赵");
 
         //TODO 3.使用Union连接多条流
         DataStream<String> union = strDStream.union(intDStream, nameDStream);

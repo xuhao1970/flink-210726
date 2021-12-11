@@ -21,7 +21,7 @@ public class Flink05_TransForm_Connect {
         //2.从元素中获取数据
         DataStreamSource<String> strDStream = env.fromElements("a", "b", "c", "d", "e");
 
-        DataStreamSource<Integer> intDStream = env.fromElements(1, 2, 3, 4, 5);
+        DataStreamSource<Integer> intDStream = env.fromElements(1, 2, 3, 4);
 
         //TODO 3.使用Connect连接两条流
         ConnectedStreams<String, Integer> connect = strDStream.connect(intDStream);

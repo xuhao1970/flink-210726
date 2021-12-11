@@ -16,7 +16,7 @@ public class Flink07_TransForm_Max_MaxBy {
         env.setParallelism(1);
 
         //2.从端口中获取数据
-        DataStreamSource<String> streamSource = env.socketTextStream("localhost", 9999);
+        DataStreamSource<String> streamSource = env.socketTextStream("xuhao001", 9999);
 
         SingleOutputStreamOperator<WaterSensor> map = streamSource.map(new MapFunction<String, WaterSensor>() {
             @Override

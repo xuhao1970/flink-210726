@@ -22,7 +22,7 @@ public class Flink09_TransForm_Process {
         env.setParallelism(1);
 
         //2.从端口读取数据
-        DataStreamSource<String> streamSource = env.socketTextStream("localhost", 9999);
+        DataStreamSource<String> streamSource = env.socketTextStream("xuhao001", 9999);
 
         //3.利用process将单词切分并组成Tuple元组
         SingleOutputStreamOperator<Tuple2<String, Integer>> wordToOneDStream = streamSource.process(new ProcessFunction<String, Tuple2<String, Integer>>() {
@@ -40,20 +40,29 @@ public class Flink09_TransForm_Process {
 
         //5.使用process实现Sum功能
         keyedStream.process(new KeyedProcessFunction<Tuple, Tuple2<String, Integer>, Tuple2<String, Integer>>() {
-//            private ValueState<Integer> valueState;
+            private HashMap<String, Integer> map;
+            //            private ValueState<Integer> valueState;
 //
 //            @Override
 //            public void open(Configuration parameters) throws Exception {
 //                valueState = getRuntimeContext().getState(new ValueStateDescriptor<Integer>("value-state", Integer.class,0));
 //            }
 
+            @Override
+            public void open(Configuration parameters) throws Exception {
+                map = new HashMap<>();
+//                Integer orDefault = map.getOrDefault("1", 0);
+//                System.out.println(map);
+//                System.out.println(orDefault);
+            }
+
             //保存上一次的累加结果
 //            private Integer lastSum = 0;
-            private HashMap<String, Integer> map = new HashMap<>();
+
 
             @Override
             public void processElement(Tuple2<String, Integer> value, Context ctx, Collector<Tuple2<String, Integer>> out) throws Exception {
-                //1.当这个单词是第一次来的时候，先存
+/*                //1.当这个单词是第一次来的时候，先存
                 if (!map.containsKey(value.f0)){
                     //不存在，则将自己个数存进去
                     map.put(value.f0, value.f1);
@@ -62,12 +71,13 @@ public class Flink09_TransForm_Process {
                     Integer lastSum = map.get(value.f0);
                     lastSum += value.f1;
                     map.put(value.f0, lastSum);
-                }
+                }*/
+                map.put(value.f0, map.getOrDefault(value.f0, 0) + value.f1);
               /*  Integer lastSum = valueState.value();
                 valueState.update(lastSum+value.f1);*/
 
 //                out.collect(Tuple2.of(value.f0,valueState.value()));
-                out.collect(Tuple2.of(value.f0,map.get(value.f1)));
+                out.collect(Tuple2.of(value.f0,map.get(value.f0)));
 
 
             }

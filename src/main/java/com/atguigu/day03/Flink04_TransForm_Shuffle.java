@@ -17,7 +17,7 @@ public class Flink04_TransForm_Shuffle {
         env.setParallelism(4);
 
         //2.从端口获取数据
-        DataStreamSource<String> streamSource = env.socketTextStream("localhost", 9999);
+        DataStreamSource<String> streamSource = env.socketTextStream("xuhao001", 9999);
 
         // 3.利用Filter算子将奇数过滤掉
         SingleOutputStreamOperator<WaterSensor> map = streamSource.map(new MapFunction<String, WaterSensor>() {
